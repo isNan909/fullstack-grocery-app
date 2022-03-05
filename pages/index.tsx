@@ -1,10 +1,13 @@
-import type { NextPage } from 'next';
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import prisma from 'lib/prisma-client';
 import FormGrocery from 'components/Formgrocery';
+import { GroceryList } from 'interface/index';
 
+import { VStack, StackDivider, Box } from '@chakra-ui/react';
 import styles from '../styles/Home.module.css';
 
-const Home: NextPage = () => {
+const Home = ({ grocery }: GroceryList) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,9 +17,38 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <FormGrocery />
+        <VStack
+          divider={<StackDivider borderColor="gray.200" />}
+          spacing={4}
+          align="stretch"
+        >
+          {grocery?.map((grocery, index) => (
+            <Box key={index}>
+              <div>
+                <h2>{grocery.name}</h2>
+                <p>{grocery.quantity}</p>
+              </div>
+            </Box>
+          ))}
+        </VStack>
       </main>
     </div>
   );
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const myGroceries = await prisma.grocery.findMany({
+    select: {
+      name: true,
+      quantity: true,
+      id: true,
+    },
+  });
+  return {
+    props: {
+      grocery: myGroceries,
+    },
+  };
+};

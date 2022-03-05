@@ -11,3 +11,11 @@ export interface FormData {
     name: String
     quantity: Number
 }
+
+export interface GroceryList {
+    grocery: {
+        id: String
+        name: String
+        quantity: Number
+    }[]
+}
