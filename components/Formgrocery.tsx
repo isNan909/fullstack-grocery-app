@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormData } from 'interface';
-import { postGroceries } from 'services/postGroceries';
+import { postGroceries } from 'services/api';
 import {
   Box,
   FormControl,
@@ -58,7 +58,7 @@ const FormGrocery = () => {
   };
 
   return (
-    <Box minH={'100vh'} width="100%">
+    <Box>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'} textAlign={'center'}>

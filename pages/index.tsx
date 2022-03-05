@@ -3,11 +3,56 @@ import Head from 'next/head';
 import prisma from 'lib/prisma-client';
 import FormGrocery from 'components/Formgrocery';
 import { GroceryList } from 'interface/index';
+import { deleteGroceries, editGroceries } from 'services/api';
 
-import { VStack, StackDivider, Box } from '@chakra-ui/react';
+import { Stack, Container, Box, Heading, useToast } from '@chakra-ui/react';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import styles from '../styles/Home.module.css';
 
 const Home = ({ grocery }: GroceryList) => {
+  const toast = useToast();
+  async function deleteGrocery(id: String) {
+    try {
+      await deleteGroceries(id);
+      toast({
+        title: 'Grocery item deleted',
+        description: 'We deleted your grocery inventory',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Grocery cannot be deleted',
+        description: 'We could not delete your inventory',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }
+
+  async function editGrocery(id: String) {
+    await editGroceries(id);
+    // try {
+    //   toast({
+    //     title: 'Grocery item deleted',
+    //     description: 'We deleted your grocery inventory',
+    //     status: 'success',
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+    // } catch (error) {
+    //   toast({
+    //     title: 'Grocery cannot be deleted',
+    //     description: 'We could not delete your inventory',
+    //     status: 'error',
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+    // }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,21 +61,31 @@ const Home = ({ grocery }: GroceryList) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <FormGrocery />
-        <VStack
-          divider={<StackDivider borderColor="gray.200" />}
-          spacing={4}
-          align="stretch"
-        >
-          {grocery?.map((grocery, index) => (
-            <Box key={index}>
-              <div>
-                <h2>{grocery.name}</h2>
-                <p>{grocery.quantity}</p>
-              </div>
-            </Box>
-          ))}
-        </VStack>
+        <Container maxW="container.sm">
+          <FormGrocery />
+          <Heading as="h5" size="sm">
+            My Grocery:
+          </Heading>
+          <Stack spacing={4}>
+            {grocery?.map((grocery, index) => (
+              <Box key={index} rounded={'lg'} boxShadow={'lg'} p={8}>
+                <div>
+                  <h2>Item name: {grocery.name}</h2>
+                  <p>Quantity: {grocery.quantity}</p>
+                </div>
+                <Box>
+                  <button onClick={() => editGrocery(grocery.id)}>
+                    <EditIcon />
+                  </button>
+                  <br />
+                  <button onClick={() => deleteGrocery(grocery.id)}>
+                    <DeleteIcon />
+                  </button>
+                </Box>
+              </Box>
+            ))}
+          </Stack>
+        </Container>
       </main>
     </div>
   );
