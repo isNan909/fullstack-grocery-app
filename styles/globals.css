@@ -14,3 +14,9 @@ a {
 * {
   box-sizing: border-box;
 }
+
+footer,
+footer > a {
+  text-align: center;
+  display: block;
+}
