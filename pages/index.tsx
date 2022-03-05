@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import FormGrocery from 'components/Form-grocery';
+import FormGrocery from 'components/Formgrocery';
 
 import styles from '../styles/Home.module.css';
 
