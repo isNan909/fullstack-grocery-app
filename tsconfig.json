@@ -21,7 +21,8 @@
     "@/components/*": ["../components/*"],
     "@/styles/*": ["../styles/*"],
     "@/lib/*": ["../lib/*"],
-    "@/utils/*": ["../utils/*"]
+    "@/utils/*": ["../utils/*"],
+    "@/interface/*": ["../interface/*"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

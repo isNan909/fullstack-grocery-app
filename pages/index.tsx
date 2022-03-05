@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { Button } from '@chakra-ui/react';
+import FormGrocery from 'components/Form-grocery';
 
 import styles from '../styles/Home.module.css';
 
@@ -13,9 +13,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <h1>💚 Application built with NextJS and Prisma with Typescript.</h1>
-        <br />
-        <Button colorScheme="blue">ChakraUI Button</Button>
+        <FormGrocery />
       </main>
     </div>
   );
