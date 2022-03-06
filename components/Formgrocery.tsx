@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FormData } from 'interface';
-import { postGroceries } from 'services/api';
+import { useRouter } from 'next/router';
+import { postGroceries, editGroceries } from 'services/api';
 import {
   Box,
   FormControl,
@@ -15,18 +16,39 @@ import {
   useToast,
 } from '@chakra-ui/react';
 
-const FormGrocery = () => {
-  const [form, setForm] = useState<FormData>({
-    name: '',
-    quantity: 0,
-    id: '',
-  });
+const FormGrocery = ({ form, set }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
+  const router = useRouter();
 
   const handleSubmit = async (data: FormData) => {
     try {
       setIsSubmitting(true);
+      if (data.id) {
+        try {
+          await editGroceries(data.id, data);
+          clearFields();
+          setIsSubmitting(false);
+          toast({
+            title: 'Grocery item updated',
+            description: 'We updated your grocery inventory',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+        } catch (error) {
+          toast({
+            title: 'Grocery cannot be updated',
+            description: 'We could not updated your inventory',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+          setIsSubmitting(false);
+        }
+        router.replace(router.asPath);
+        return;
+      }
       await postGroceries(data);
       clearFields();
       setIsSubmitting(false);
@@ -47,10 +69,12 @@ const FormGrocery = () => {
       });
       setIsSubmitting(false);
     }
+    router.replace(router.asPath);
+    return;
   };
 
   const clearFields = async () => {
-    setForm({
+    set({
       name: '',
       quantity: 0,
       id: '',
@@ -59,7 +83,7 @@ const FormGrocery = () => {
 
   return (
     <Box>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+      <Stack spacing={8} mx={'auto'} maxW={'lg'}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'} textAlign={'center'}>
             Your Grocery Inventory
@@ -86,7 +110,7 @@ const FormGrocery = () => {
                 <Input
                   type="text"
                   value={form.name.toString()}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(e) => set({ ...form, name: e.target.value })}
                 />
               </FormControl>
               <FormControl id="groceryItem" isRequired py={2}>
@@ -94,9 +118,7 @@ const FormGrocery = () => {
                 <Input
                   type="text"
                   value={+form.quantity}
-                  onChange={(e) =>
-                    setForm({ ...form, quantity: +e.target.value })
-                  }
+                  onChange={(e) => set({ ...form, quantity: +e.target.value })}
                 />
               </FormControl>
               <Stack spacing={10} mt={6}>

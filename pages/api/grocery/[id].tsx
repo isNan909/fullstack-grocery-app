@@ -16,13 +16,15 @@ export default async function handler(
 
   if (req.method === 'PUT') {
     console.log(req.body, 'PUT request');
-    // const grocery = await prisma.grocery.update({
-    //   where: { id: groceryID },
-    //   data: {
-    //     name: 'Viola the Magnificent',
-    //   },
-    // });
-    // res.json(grocery);
+    const grocery = await prisma.grocery.update({
+      where: { id: groceryID },
+      data: {
+        name: req.body.name,
+        quantity: req.body.quantity,
+        id: req.body.id,
+      },
+    });
+    res.json(grocery);
   } else {
     new Error('Method not allowed');
   }

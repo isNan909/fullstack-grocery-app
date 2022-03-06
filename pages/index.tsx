@@ -1,16 +1,31 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import prisma from 'lib/prisma-client';
 import FormGrocery from 'components/Formgrocery';
-import { GroceryList } from 'interface/index';
-import { deleteGroceries, editGroceries } from 'services/api';
+import { FormData, GroceryList } from 'interface/index';
+import { deleteGroceries } from 'services/api';
 
-import { Stack, Container, Box, Heading, useToast } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import {
+  Stack,
+  Container,
+  Box,
+  useToast,
+  Flex,
+  Spacer,
+} from '@chakra-ui/react';
+import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
 import styles from '../styles/Home.module.css';
 
 const Home = ({ grocery }: GroceryList) => {
+  const [form, setForm] = useState<FormData>({
+    name: '',
+    quantity: 0,
+    id: '',
+  });
   const toast = useToast();
+  const router = useRouter();
   async function deleteGrocery(id: String) {
     try {
       await deleteGroceries(id);
@@ -30,27 +45,15 @@ const Home = ({ grocery }: GroceryList) => {
         isClosable: true,
       });
     }
+    router.replace(router.asPath);
   }
 
-  async function editGrocery(id: String) {
-    await editGroceries(id);
-    // try {
-    //   toast({
-    //     title: 'Grocery item deleted',
-    //     description: 'We deleted your grocery inventory',
-    //     status: 'success',
-    //     duration: 3000,
-    //     isClosable: true,
-    //   });
-    // } catch (error) {
-    //   toast({
-    //     title: 'Grocery cannot be deleted',
-    //     description: 'We could not delete your inventory',
-    //     status: 'error',
-    //     duration: 3000,
-    //     isClosable: true,
-    //   });
-    // }
+  async function editGrocery(id: String, data: FormData) {
+    setForm({
+      name: data.name,
+      quantity: data.quantity,
+      id,
+    });
   }
 
   return (
@@ -61,30 +64,50 @@ const Home = ({ grocery }: GroceryList) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <Container maxW="container.sm">
-          <FormGrocery />
-          <Heading as="h5" size="sm">
-            My Grocery:
-          </Heading>
-          <Stack spacing={4}>
-            {grocery?.map((grocery, index) => (
-              <Box key={index} rounded={'lg'} boxShadow={'lg'} p={8}>
-                <div>
-                  <h2>Item name: {grocery.name}</h2>
-                  <p>Quantity: {grocery.quantity}</p>
-                </div>
-                <Box>
-                  <button onClick={() => editGrocery(grocery.id)}>
-                    <EditIcon />
-                  </button>
-                  <br />
-                  <button onClick={() => deleteGrocery(grocery.id)}>
-                    <DeleteIcon />
-                  </button>
+        <Container maxW="container.md">
+          <Flex>
+            <Box>
+              <FormGrocery set={setForm} form={form} />
+            </Box>
+            <Spacer />
+            <Box display="flex" flexDirection="column" alignItems="flex-start">
+              <Stack spacing={4}>
+                {grocery?.map((grocery, index) => (
+                  <Box
+                    key={index}
+                    rounded={'lg'}
+                    boxShadow={'lg'}
+                    p={8}
+                    display="flex"
+                    alignItems={'center'}
+                    justifyContent={'space-between'}
+                  >
+                    <Box mr="10" display="flex" alignItems="center">
+                      <Box mr="4">
+                        <StarIcon />
+                      </Box>
+                      <Box>
+                        <h2>Item name: {grocery.name}</h2>
+                        <p>{grocery.quantity} kg</p>
+                      </Box>
+                    </Box>
+                    <Box display="flex" className={styles.actionButton}>
+                      <button onClick={() => editGrocery(grocery.id, grocery)}>
+                        <EditIcon />
+                      </button>
+                      <button onClick={() => deleteGrocery(grocery.id)}>
+                        <DeleteIcon />
+                      </button>
+                    </Box>
+                  </Box>
+                ))}
+                <br />
+                <Box display="flex" alignItems="left">
+                  {grocery.length === 0 && <>No grocery items</>}
                 </Box>
-              </Box>
-            ))}
-          </Stack>
+              </Stack>
+            </Box>
+          </Flex>
         </Container>
       </main>
     </div>
