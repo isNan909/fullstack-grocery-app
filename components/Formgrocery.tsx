@@ -89,7 +89,7 @@ const FormGrocery = ({ form, set }) => {
             Your Grocery Inventory
           </Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
-            Keep track of your grocery list 🥕
+            Keep track of your grocery list
           </Text>
         </Stack>
         <Box

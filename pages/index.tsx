@@ -110,7 +110,7 @@ const Home = ({ grocery }: GroceryList) => {
                 ))}
                 <br />
                 <Box display="flex" alignItems="left">
-                  {grocery.length === 0 && <>No grocery items</>}
+                  {grocery.length === 0 && <>No grocery items 🥕</>}
                 </Box>
               </Stack>
             </Box>
