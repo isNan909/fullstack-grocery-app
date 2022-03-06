@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import prisma from 'lib/prisma-client';
@@ -66,7 +67,13 @@ const Home = ({ grocery }: GroceryList) => {
       <main className={styles.main}>
         <Container maxW="container.md">
           <Flex>
-            <Box>
+            <Box textAlign="center">
+              <Image
+                src="/vegetable-icon.png"
+                alt="vegetable"
+                width="64"
+                height="64"
+              />
               <FormGrocery set={setForm} form={form} />
             </Box>
             <Spacer />
