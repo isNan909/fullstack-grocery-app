@@ -16,10 +16,10 @@ import {
   Flex,
   Spacer,
 } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import styles from '../styles/Home.module.css';
 
-const Home = ({ grocery }: GroceryList) => {
+const Home: React.FC<GroceryList> = ({ grocery }: GroceryList) => {
   const [form, setForm] = useState<FormData>({
     name: '',
     quantity: 0,
@@ -90,11 +90,9 @@ const Home = ({ grocery }: GroceryList) => {
                     justifyContent={'space-between'}
                   >
                     <Box mr="10" display="flex" alignItems="center">
-                      <Box mr="4">
-                        <StarIcon />
-                      </Box>
+                      <Box mr="4">🥕</Box>
                       <Box>
-                        <h2>Item name: {grocery.name}</h2>
+                        <h2>{grocery.name}</h2>
                         <p>{grocery.quantity} kg</p>
                       </Box>
                     </Box>

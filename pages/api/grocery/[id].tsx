@@ -15,7 +15,6 @@ export default async function handler(
   }
 
   if (req.method === 'PUT') {
-    console.log(req.body, 'PUT request');
     const grocery = await prisma.grocery.update({
       where: { id: groceryID },
       data: {
